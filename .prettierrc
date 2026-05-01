@@ -1,0 +1,6 @@
+{
+  "singleQuote": true,
+  "semi": true,
+  "endOfLine": "crlf",
+  "plugins": ["prettier-plugin-ejs"]
+}
