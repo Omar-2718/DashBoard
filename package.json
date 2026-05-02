@@ -31,6 +31,7 @@
     "@types/express-ejs-layouts": "^2.5.4",
     "@types/express-flash": "^0.0.5",
     "@types/express-session": "^1.19.0",
+    "@types/method-override": "^3.0.0",
     "@types/morgan": "^1.9.10",
     "@types/node": "^25.6.0",
     "eslint": "^10.2.1",

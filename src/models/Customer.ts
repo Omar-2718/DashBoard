@@ -26,6 +26,10 @@ const CustomerSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  details: {
+    type: String,
+    required: false,
+  },
 });
 
 export default mongoose.model('Customer', CustomerSchema);

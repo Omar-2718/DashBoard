@@ -50,14 +50,14 @@
             </a>
 
             <a
-              href="/view/<%= element._id %>"
+              href="/edit/<%= element._id %>"
               type="button"
               class="btn btn-warning btn-small"
               >Edit
               <i class="bi bi-pencil"></i>
             </a>
             <form
-              action="/edit/<%=element._id%>?_method=DELETE"
+              action="/delete/<%=element._id%>?_method=DELETE"
               method="POST"
               class="position-relative"
             >

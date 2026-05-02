@@ -1,1 +1,53 @@
-view customer
+<div
+  class="d-flex justify-content-between flex-wrap flex-md nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+>
+  <h1 class="h2"><%= customer.firstName %> <%= customer.lastName %></h1>
+  <div class="btn-toolbar mb-2 mb-md-0"></div>
+</div>
+
+<div class="col py-3">
+  <div class="row">
+    <div class="col">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="/">Dashboard</a>
+          </li>
+          <li class="breadcrumb-item active">
+            <a href="/"><%= customer.firstName %></a>
+          </li>
+        </ol>
+      </nav>
+    </div>
+    <div class="col text-end fw-lighter">
+      <b
+        >Last Updated at
+        <%= new Date(customer.updatedAt).toLocaleString() %></b
+      >
+      <b>UserID: <%= customer._id %></b>
+    </div>
+  </div>
+</div>
+
+<ul class="list-group">
+  <li class="list-group-item">
+    <strong>First Name:</strong>
+    <%= customer.firstName %>
+  </li>
+  <li class="list-group-item">
+    <strong>Last Name:</strong>
+    <%= customer.lastName %>
+  </li>
+  <li class="list-group-item">
+    <strong>Email:</strong>
+    <%= customer.email %>
+  </li>
+  <li class="list-group-item">
+    <strong>Telephone Number:</strong>
+    <%= customer.tel %>
+  </li>
+  <li class="list-group-item">
+    <strong>Customer Details:</strong>
+    <%= customer.details %>
+  </li>
+</ul>

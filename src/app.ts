@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import expressLayout from 'express-ejs-layouts';
 import path from 'node:path';
 import customerRoute from './routes/customerRoute';
-
+import methodOverride from 'method-override';
 import flash from 'connect-flash';
 import session from 'express-session';
 
@@ -16,6 +16,7 @@ app.use(
     cookie: { secure: false, maxAge: 1000 * 60 * 60 * 24 * 7 },
   }),
 );
+app.use(methodOverride('_method'));
 app.use(flash());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
