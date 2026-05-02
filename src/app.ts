@@ -6,7 +6,7 @@ import customerRoute from './routes/customerRoute';
 import methodOverride from 'method-override';
 import flash from 'connect-flash';
 import session from 'express-session';
-
+import errorController from './controllers/errorController';
 const app = express();
 app.use(
   session({
@@ -39,5 +39,5 @@ app.use(customerRoute);
 app.get('/*splat', (req, res) => {
   return res.status(404).send('404');
 });
-
+app.use(errorController);
 export default app;

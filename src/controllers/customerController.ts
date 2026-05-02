@@ -1,42 +1,40 @@
-import { Request, Response } from 'express';
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+import { NextFunction, Request, Response } from 'express';
 import Customer from '../models/Customer';
 import mongoose from 'mongoose';
+import { CreateCustomerInput } from '../schemas/customerSchema';
+import AppError from '../utils/AppError';
 
-export const homepage = async (req: any, res: any) => {
+export const homepage = async (req: Request, res: Response) => {
   const messages = req.flash('info');
   const locals = {
     title: 'NodeJs',
     description: 'Free NodeJs User Management System',
   };
   const perPage = 10;
-  const page = req.query.page || 1;
+  const page = Number(req.query.page) || 1;
 
-  try {
-    const customers = await Customer.aggregate([
-      {
-        $sort: {
-          updatedAt: -1,
-        },
+  const customers = await Customer.aggregate([
+    {
+      $sort: {
+        updatedAt: -1,
       },
-    ])
-      .skip(perPage * page - perPage)
-      .limit(perPage)
-      .exec();
-    const customerCount = await Customer.countDocuments();
-    res.render('index', {
-      locals,
-      messages,
-      customers,
-      current: page,
-      pages: Math.ceil(customerCount / perPage),
-    });
-  } catch (error) {
-    console.log(error);
-    res.redirect('/');
-  }
+    },
+  ])
+    .skip(perPage * page - perPage)
+    .limit(perPage)
+    .exec();
+  const customerCount = await Customer.countDocuments();
+  res.render('index', {
+    locals,
+    messages,
+    customers,
+    current: page,
+    pages: Math.ceil(customerCount / perPage),
+  });
 };
 
-export const addCustomer = (req: any, res: any) => {
+export const addCustomer = (req: Request, res: Response) => {
   const locals = {
     title: 'Add New Customer',
     description: 'Free NodeJs User Management System',
@@ -44,7 +42,10 @@ export const addCustomer = (req: any, res: any) => {
   res.render('customer/add', locals);
 };
 
-export const postCustomer = async (req: Request, res: Response) => {
+export const postCustomer = async (
+  req: Request<{}, {}, CreateCustomerInput['body']>,
+  res: Response,
+) => {
   console.log(req.body);
   const newCustomer = new Customer({
     firstName: req.body.firstName,
@@ -54,73 +55,73 @@ export const postCustomer = async (req: Request, res: Response) => {
     tel: req.body.tel,
   });
 
-  try {
-    await Customer.create(newCustomer);
-    req.flash('info', 'Customer added successfully');
+  await Customer.create(newCustomer);
+  req.flash('info', 'Customer added successfully');
 
-    res.redirect('/');
-  } catch (error) {
-    console.log(error);
-    res.redirect('/');
-  }
+  res.redirect('/');
 };
-export const viewCustomer = async (req: Request, res: Response) => {
+export const viewCustomer = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const id = req.params.id;
-  try {
-    const customer = await Customer.findOne({ _id: id });
-    const locals = {
-      title: 'View Customer',
-      description: 'Free NodeJs User Management System',
-    };
-    res.render('customer/view', { locals, customer });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send('Internal Server Error');
+  const customer = await Customer.findOne({ _id: id });
+  if (!customer) {
+    return next(new AppError('Customer not found', 404));
   }
+  const locals = {
+    title: 'View Customer',
+    description: 'Free NodeJs User Management System',
+  };
+  res.render('customer/view', { locals, customer });
 };
 
-export const editCustomer = async (req: Request, res: Response) => {
+export const editCustomer = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const id = req.params.id;
-  try {
-    const locals = {
-      title: 'Edit Customer',
-      description: 'Free NodeJs User Management System',
-    };
-    const customer = await Customer.findOne({ _id: id });
-    res.render('customer/edit', { locals, customer });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send('Internal Server Error');
+  const locals = {
+    title: 'Edit Customer',
+    description: 'Free NodeJs User Management System',
+  };
+  const customer = await Customer.findOne({ _id: id });
+  if (!customer) {
+    return next(new AppError('Customer not found', 404));
   }
+  res.render('customer/edit', { locals, customer });
 };
-export const updateCustomer = async (req: Request, res: Response) => {
+export const updateCustomer = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const id = req.params.id;
-  try {
-    await Customer.findByIdAndUpdate(id, {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      details: req.body.details,
-      email: req.body.email,
-      tel: req.body.tel,
-      updatedAt: new Date(),
-    });
-    req.flash('info', 'Customer updated successfully');
-    res.redirect('/');
-  } catch (error) {
-    console.log(error);
-    res.status(500).send('Internal Server Error');
+  const customer = await Customer.findByIdAndUpdate(id, {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    details: req.body.details,
+    email: req.body.email,
+    tel: req.body.tel,
+    updatedAt: new Date(),
+  });
+  if (!customer) {
+    return next(new AppError('Customer not found', 404));
   }
+  req.flash('info', 'Customer updated successfully');
+  res.redirect('/');
 };
-export const deleteCustomer = async (req: Request, res: Response) => {
-  try {
-    const id = req.params.id;
-    await Customer.findByIdAndDelete(id);
-    req.flash('info', 'Customer deleted successfully');
-    res.redirect('/');
-  } catch (error) {
-    console.log(error);
-    res.status(500).send('Internal Server Error');
-  }
+export const deleteCustomer = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const id = req.params.id;
+  await Customer.findByIdAndDelete(id);
+  req.flash('info', 'Customer deleted successfully');
+  res.redirect('/');
 };
 
 export const searchCustomer = async (req: Request, res: Response) => {
