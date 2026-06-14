@@ -34,7 +34,7 @@ const handleCastErrorDB = (err) => {
     const message = `invalid ${err.path}: ${err.value}`;
     return new AppError_1.default(message, 400);
 };
-const handelDuplicateFieldsDB = (err) => {
+const handleDuplicateFieldsDB = (err) => {
     const message = `duplicate field value: ${JSON.stringify(err.keyValue)}. please use another value!`;
     return new AppError_1.default(message, 400);
 };
@@ -43,7 +43,7 @@ const handleValidationErrorDB = (err) => {
     const message = `invalid input data ${errors.join('. ')}`;
     return new AppError_1.default(message, 400);
 };
-const handelZodError = (err) => {
+const handleZodError = (err) => {
     const errors = err.issues.map((el) => `${el.message}`);
     return new AppError_1.default(`${errors.join('\n')}`, 400);
 };
@@ -56,12 +56,12 @@ exports.default = (err, req, res, next) => {
     else if (process.env.NODE_ENV === 'prod') {
         if (err.name === 'CastError')
             err = handleCastErrorDB(err);
-        // if (err.code === 11000) err = handelDuplicateFieldsDB(err);
+        if (err.code === 11000)
+            err = handleDuplicateFieldsDB(err);
         if (err.name === 'ValidationError')
             err = handleValidationErrorDB(err);
         if (err instanceof zod_1.ZodError)
-            err = handelZodError(err);
-        console.log('whatever', typeof err);
+            err = handleZodError(err);
         sendErrorProd(err, res);
     }
 };

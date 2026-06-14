@@ -2,9 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateResources = void 0;
 const validateResources = (schema) => {
-    return (req, res, next) => {
+    return (req, _res, next) => {
         try {
-            console.log('Validating resources with schema:', schema);
             const parsedData = schema.parse({
                 body: req.body,
                 query: req.query,

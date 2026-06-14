@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import { NextFunction, Request, Response } from 'express';
 import Customer from '../models/Customer';
-import mongoose from 'mongoose';
 import { CreateCustomerInput } from '../schemas/customerSchema';
 import AppError from '../utils/AppError';
 
@@ -46,7 +45,6 @@ export const postCustomer = async (
   req: Request<{}, {}, CreateCustomerInput['body']>,
   res: Response,
 ) => {
-  console.log(req.body);
   const newCustomer = new Customer({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -116,7 +114,7 @@ export const updateCustomer = async (
 export const deleteCustomer = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  _next: NextFunction,
 ) => {
   const id = req.params.id;
   await Customer.findByIdAndDelete(id);
@@ -125,7 +123,7 @@ export const deleteCustomer = async (
 };
 
 export const searchCustomer = async (req: Request, res: Response) => {
-  const searchTerm = req.body.searchTerm;
+  const searchTerm = String(req.body.searchTerm ?? '');
   const searchNoSpecialChar = searchTerm.replace(/[^a-zA-Z0-9 ]/g, '');
 
   const customers = await Customer.find({

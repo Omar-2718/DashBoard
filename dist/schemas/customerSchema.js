@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getCustomerSchema = exports.createCustomerSchema = void 0;
 const zod_1 = require("zod");
-exports.createCustomerSchema = zod_1.z.object({
-    body: zod_1.z
-        .object({
+exports.createCustomerSchema = zod_1.z
+    .object({
+    body: zod_1.z.object({
         firstName: zod_1.z
             .string()
             .nonempty('First name is required')
@@ -27,9 +27,9 @@ exports.createCustomerSchema = zod_1.z.object({
             .string()
             .max(200, 'Customer details must be at most 200 characters')
             .optional(),
-    })
-        .strict(),
-});
+    }),
+})
+    .strict();
 exports.getCustomerSchema = zod_1.z.object({
     params: zod_1.z.object({
         id: zod_1.z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid MongoDB ObjectID'),

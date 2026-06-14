@@ -43,7 +43,6 @@ const addCustomer = (req, res) => {
 };
 exports.addCustomer = addCustomer;
 const postCustomer = async (req, res) => {
-    console.log(req.body);
     const newCustomer = new Customer_1.default({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -99,7 +98,7 @@ const updateCustomer = async (req, res, next) => {
     res.redirect('/');
 };
 exports.updateCustomer = updateCustomer;
-const deleteCustomer = async (req, res, next) => {
+const deleteCustomer = async (req, res, _next) => {
     const id = req.params.id;
     await Customer_1.default.findByIdAndDelete(id);
     req.flash('info', 'Customer deleted successfully');
@@ -107,7 +106,7 @@ const deleteCustomer = async (req, res, next) => {
 };
 exports.deleteCustomer = deleteCustomer;
 const searchCustomer = async (req, res) => {
-    const searchTerm = req.body.searchTerm;
+    const searchTerm = String(req.body.searchTerm ?? '');
     const searchNoSpecialChar = searchTerm.replace(/[^a-zA-Z0-9 ]/g, '');
     const customers = await Customer_1.default.find({
         $or: [

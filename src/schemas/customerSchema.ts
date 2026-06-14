@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-export const createCustomerSchema = z.object({
-  body: z
-    .object({
+export const createCustomerSchema = z
+  .object({
+    body: z.object({
       firstName: z
         .string()
         .nonempty('First name is required')
@@ -25,9 +25,9 @@ export const createCustomerSchema = z.object({
         .string()
         .max(200, 'Customer details must be at most 200 characters')
         .optional(),
-    })
-    .strict(),
-});
+    }),
+  })
+  .strict();
 export const getCustomerSchema = z.object({
   params: z.object({
     id: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid MongoDB ObjectID'),
